@@ -195,9 +195,12 @@ class xv11():
         #self.port.send("getldsscan\r\n")
         try:
             sensor_packet, _ = self.sensor_sock.recvfrom(65536)
+
+            print 'got a sensor packet'
             self.sensor_dict = pickle.loads(sensor_packet)
         except socket.timeout:
             self.sensor_dict = {}
+            print "no packet received... not necessarily a problem"
 
     @staticmethod
     def filter_outliers(ranges,intensities):
@@ -238,7 +241,7 @@ class xv11():
         #This is a work-around for a bug in the Neato API. The bug is that the
         #robot won't stop instantly if a 0-velocity command is sent - the robot
         #could continue moving for up to a second. To work around this bug, the
-        #first time a 0-velocity is sent in, a velocity of 1,1,1 is sent. Then, 
+        #first time a 0-velocity is sent in, a velocity of 1,1,1 is sent. Then,
         #the zero is sent. This effectively causes the robot to stop instantly.
         if (int(l) == 0 and int(r) == 0 and int(s) == 0):
             if not(self.stop_state):
@@ -332,4 +335,3 @@ class xv11():
     #ButtonAmberDim - Start Button Amber Dim (mutually exclusive of other Button options)
     #ButtonGreenDim - Start Button Green Dim (mutually exclusive of other Button options)
     #ButtonOff - Start Button Off
-
